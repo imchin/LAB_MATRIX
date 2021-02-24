@@ -55,8 +55,15 @@ static void MX_USART2_UART_Init(void);
 uint16_t ButtonMatrixState = 0;
 uint32_t ButtonMatrixTimestamp = 0;
 uint32_t numnow = 0;
+uint8_t state = 1;
+uint16_t ButtonMatrixstatepre=0;
+
+enum {
+	one=1,two,three,four,five,six,saven,egg,nine,ten,even,twelve,waitclear,clear = 10,BS = 11,ok = 12
+	};
 void ButtonMatrixUpdate();
 void checknumpress();
+void q();
 
 /* USER CODE END PFP */
 
@@ -96,14 +103,8 @@ int main(void)
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
 
-	uint8_t state = 0;
-	uint16_t ButtonMatrixstatepre=0;
-	uint32_t timestampsampling=0;
-	uint16_t ButtonMatrixState2=0;
-	uint16_t numnow2=0;
-	enum {
-		one=0,two,three,four,five,six,saven,egg,nine,ten,even,twelve,waitclear,clear = 10,BS = 11,ok = 12
-	};
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, RESET);
+  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, SET);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -112,197 +113,7 @@ int main(void)
 
 		ButtonMatrixUpdate();
 		checknumpress();
-		ButtonMatrixState2=ButtonMatrixState;
-		numnow2=numnow;
-		switch (state) {
-			case waitclear:
-				if ((ButtonMatrixState != 0) && (ButtonMatrixstatepre!=ButtonMatrixState)){
-					if (numnow == clear) {
-						state = one;
-					}
-				}
-			break;
- 			case one:
-				if ((ButtonMatrixState != 0) && (ButtonMatrixstatepre!=ButtonMatrixState)){
-					if (numnow == 6) {
-						state = two;
-					}else if (numnow == clear){
-						state = one;
-					}else if (numnow == BS){
-						state = one;
-					}else if (numnow == ok){
-						state = one;
-					}else{
-						state=waitclear;
-					}
-				}
-			break;
- 			case two:
-				if ((ButtonMatrixState != 0) && (ButtonMatrixstatepre!=ButtonMatrixState)){
-					if (numnow == 2) {
-						state = three;
-					}else if (numnow == clear){
-						state = one;
-					}else if (numnow == BS){
-						state = one;
-					}else if (numnow == ok){
-						state = one;
-					}else{
-						state=waitclear;
-					}
-				}
- 			break;
- 			case three:
-				if ((ButtonMatrixState != 0) && (ButtonMatrixstatepre!=ButtonMatrixState)){
-					if (numnow == 3) {
-						state = four;
-					}else if (numnow == clear){
-						state = one;
-					}else if (numnow == BS){
-						state = two;
-					}else if (numnow == ok){
-						state = one;
-					}else{
-						state=waitclear;
-					}
-				}
- 			break;
- 			case four:
-				if ((ButtonMatrixState != 0) && (ButtonMatrixstatepre!=ButtonMatrixState)){
-					if (numnow == 4) {
-						state = five;
-					}else if (numnow == clear){
-						state = one;
-					}else if (numnow == BS){
-						state = three;
-					}else if (numnow == ok){
-						state = one;
-					}else{
-						state=waitclear;
-					}
-				}
-			break;
- 			case five:
-				if ((ButtonMatrixState != 0) && (ButtonMatrixstatepre!=ButtonMatrixState)){
-					if (numnow == 0) {
-						state = six;
-					}else if (numnow == clear){
-						state = one;
-					}else if (numnow == BS){
-						state = four;
-					}else if (numnow == ok){
-						state = one;
-					}else{
-						state=waitclear;
-					}
-				}
- 			break;
- 			case six:
-				if ((ButtonMatrixState != 0) && (ButtonMatrixstatepre!=ButtonMatrixState)){
-					if (numnow == 5) {
-						state = saven;
-					}else if (numnow == clear){
-						state = one;
-					}else if (numnow == BS){
-						state = five;
-					}else if (numnow == ok){
-						state = one;
-					}else{
-						state=waitclear;
-					}
-				}
- 			break;
- 			case saven:
-				if ((ButtonMatrixState != 0) && (ButtonMatrixstatepre!=ButtonMatrixState)){
-					if (numnow == 0) {
-						state = egg;
-					}else if (numnow == clear){
-						state = one;
-					}else if (numnow == BS){
-						state = six;
-					}else if (numnow == ok){
-						state = one;
-					}else{
-						state=waitclear;
-					}
-				}
- 			break;
- 			case egg:
-				if ((ButtonMatrixState != 0) && (ButtonMatrixstatepre!=ButtonMatrixState)){
-					if (numnow == 0) {
-						state = nine;
-					}else if (numnow == clear){
-						state = one;
-					}else if (numnow == BS){
-						state = saven;
-					}else if (numnow == ok){
-						state = one;
-					}else{
-						state=waitclear;
-					}
-				}
- 			break;
-			case nine:
-				if ((ButtonMatrixState != 0) && (ButtonMatrixstatepre!=ButtonMatrixState)){
-					if (numnow == 0) {
-						state = ten;
-					}else if (numnow == clear){
-						state = one;
-					}else if (numnow == BS){
-						state = egg;
-					}else if (numnow == ok){
-						state = one;
-					}else{
-						state=waitclear;
-					}
-				}
- 			break;
-			case ten:
-				if ((ButtonMatrixState != 0) && (ButtonMatrixstatepre!=ButtonMatrixState)){
-					if (numnow == 2) {
-						state = even;
-					}else if (numnow == clear){
-						state = one;
-					}else if (numnow == BS){
-						state = nine;
-					}else if (numnow == ok){
-						state = one;
-					}else{
-						state=waitclear;
-					}
-				}
-			break;
-			case even:
-				if ((ButtonMatrixState != 0) && (ButtonMatrixstatepre!=ButtonMatrixState)){
-					if (numnow == 6) {
-						state = twelve;
-					}else if (numnow == clear){
-						state = one;
-					}else if (numnow == BS){
-						state = ten;
-					}else if (numnow == ok){
-						state = one;
-					}else{
-						state=waitclear;
-					}
-				}
-			break;
-			case twelve:
-				if ((ButtonMatrixState != 0) && (ButtonMatrixstatepre!=ButtonMatrixState)){
-					if (numnow == clear){
-						state = one;
-					}else if (numnow == BS){
-						state = even;
-					}else if (numnow == ok){
-						HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, RESET);
-						state = one;
-					}else{
-						state=waitclear;
-					}
-				}
-			break;
-		}
-		ButtonMatrixstatepre=ButtonMatrixState;
+		q();
 
     /* USER CODE END WHILE */
 
@@ -538,6 +349,199 @@ void checknumpress() {
 	} else {
 		numnow=255;
 	}
+}
+void q(){
+
+			switch (state) {
+				case waitclear:
+					if ((ButtonMatrixState != 0) && (ButtonMatrixstatepre!=ButtonMatrixState)){
+						if (numnow == clear) {
+							state = one;
+						}
+					}
+				break;
+	 			case one:
+					if ((ButtonMatrixState != 0) && (ButtonMatrixstatepre!=ButtonMatrixState)){
+						if (numnow == 6) {
+							state = two;
+						}else if (numnow == clear){
+							state = one;
+						}else if (numnow == BS){
+							state = one;
+						}else if (numnow == ok){
+							state = one;
+						}else{
+							state=waitclear;
+						}
+					}
+				break;
+	 			case two:
+					if ((ButtonMatrixState != 0) && (ButtonMatrixstatepre!=ButtonMatrixState)){
+						if (numnow == 2) {
+							state = three;
+						}else if (numnow == clear){
+							state = one;
+						}else if (numnow == BS){
+							state = one;
+						}else if (numnow == ok){
+							state = one;
+						}else{
+							state=waitclear;
+						}
+					}
+	 			break;
+	 			case three:
+					if ((ButtonMatrixState != 0) && (ButtonMatrixstatepre!=ButtonMatrixState)){
+						if (numnow == 3) {
+							state = four;
+						}else if (numnow == clear){
+							state = one;
+						}else if (numnow == BS){
+							state = two;
+						}else if (numnow == ok){
+							state = one;
+						}else{
+							state=waitclear;
+						}
+					}
+	 			break;
+	 			case four:
+					if ((ButtonMatrixState != 0) && (ButtonMatrixstatepre!=ButtonMatrixState)){
+						if (numnow == 4) {
+							state = five;
+						}else if (numnow == clear){
+							state = one;
+						}else if (numnow == BS){
+							state = three;
+						}else if (numnow == ok){
+							state = one;
+						}else{
+							state=waitclear;
+						}
+					}
+				break;
+	 			case five:
+					if ((ButtonMatrixState != 0) && (ButtonMatrixstatepre!=ButtonMatrixState)){
+						if (numnow == 0) {
+							state = six;
+						}else if (numnow == clear){
+							state = one;
+						}else if (numnow == BS){
+							state = four;
+						}else if (numnow == ok){
+							state = one;
+						}else{
+							state=waitclear;
+						}
+					}
+	 			break;
+	 			case six:
+					if ((ButtonMatrixState != 0) && (ButtonMatrixstatepre!=ButtonMatrixState)){
+						if (numnow == 5) {
+							state = saven;
+						}else if (numnow == clear){
+							state = one;
+						}else if (numnow == BS){
+							state = five;
+						}else if (numnow == ok){
+							state = one;
+						}else{
+							state=waitclear;
+						}
+					}
+	 			break;
+	 			case saven:
+					if ((ButtonMatrixState != 0) && (ButtonMatrixstatepre!=ButtonMatrixState)){
+						if (numnow == 0) {
+							state = egg;
+						}else if (numnow == clear){
+							state = one;
+						}else if (numnow == BS){
+							state = six;
+						}else if (numnow == ok){
+							state = one;
+						}else{
+							state=waitclear;
+						}
+					}
+	 			break;
+	 			case egg:
+					if ((ButtonMatrixState != 0) && (ButtonMatrixstatepre!=ButtonMatrixState)){
+						if (numnow == 0) {
+							state = nine;
+						}else if (numnow == clear){
+							state = one;
+						}else if (numnow == BS){
+							state = saven;
+						}else if (numnow == ok){
+							state = one;
+						}else{
+							state=waitclear;
+						}
+					}
+	 			break;
+				case nine:
+					if ((ButtonMatrixState != 0) && (ButtonMatrixstatepre!=ButtonMatrixState)){
+						if (numnow == 0) {
+							state = ten;
+						}else if (numnow == clear){
+							state = one;
+						}else if (numnow == BS){
+							state = egg;
+						}else if (numnow == ok){
+							state = one;
+						}else{
+							state=waitclear;
+						}
+					}
+	 			break;
+				case ten:
+					if ((ButtonMatrixState != 0) && (ButtonMatrixstatepre!=ButtonMatrixState)){
+						if (numnow == 2) {
+							state = even;
+						}else if (numnow == clear){
+							state = one;
+						}else if (numnow == BS){
+							state = nine;
+						}else if (numnow == ok){
+							state = one;
+						}else{
+							state=waitclear;
+						}
+					}
+				break;
+				case even:
+					if ((ButtonMatrixState != 0) && (ButtonMatrixstatepre!=ButtonMatrixState)){
+						if (numnow == 6) {
+							state = twelve;
+						}else if (numnow == clear){
+							state = one;
+						}else if (numnow == BS){
+							state = ten;
+						}else if (numnow == ok){
+							state = one;
+						}else{
+							state=waitclear;
+						}
+					}
+				break;
+				case twelve:
+					if ((ButtonMatrixState != 0) && (ButtonMatrixstatepre!=ButtonMatrixState)){
+						if (numnow == clear){
+							state = one;
+						}else if (numnow == BS){
+							state = even;
+						}else if (numnow == ok){
+							HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, RESET);
+							HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, SET);
+							state = one;
+						}else{
+							state=waitclear;
+						}
+					}
+				break;
+			}
+			ButtonMatrixstatepre=ButtonMatrixState;
 }
 
 
